@@ -2,6 +2,7 @@ import 'package:flutter_getx/data_source/local/notification_service.dart';
 import 'package:flutter_getx/data_source/remote/api_helper.dart';
 import 'package:flutter_getx/data_source/repository/home_repository.dart';
 import 'package:flutter_getx/features/controllers/home_controller.dart';
+import 'package:flutter_getx/features/pages/widgets/cus_choice_chip/controllers/cus_choice_chip_controller.dart';
 import 'package:get/instance_manager.dart';
 
 class HomeBinding extends Bindings {
@@ -11,5 +12,6 @@ class HomeBinding extends Bindings {
     Get.lazyPut(() => ApiHelper());
     Get.lazyPut(() => HomeRepository(Get.find<ApiHelper>()));
     Get.lazyPut(() => HomeController(Get.find<HomeRepository>()));
+    Get.create(() => CusChoiceChipController());
   }
 }

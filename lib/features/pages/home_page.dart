@@ -4,6 +4,8 @@ import 'package:flutter/widgets.dart';
 import 'package:flutter_getx/features/controllers/home_controller.dart';
 import 'package:flutter_getx/features/models/province.dart';
 import 'package:flutter_getx/features/pages/widgets/cus_chip.dart';
+import 'package:flutter_getx/features/pages/widgets/cus_choice_chip/widgets/cus_choice_chip.dart';
+import 'package:flutter_getx/features/pages/widgets/cus_choice_chip/widgets/list_cus_choice_chip.dart';
 import 'package:flutter_getx/features/pages/widgets/cus_multi_select_bottom_sheet.dart';
 import 'package:flutter_getx/resources/translate/translator.dart';
 import 'package:flutter_getx/routes/app_routes.dart';
@@ -18,7 +20,7 @@ class HomePage extends StatefulWidget {
   State<HomePage> createState() => _HomePageState();
 }
 
-class _HomePageState extends State<HomePage> {
+class _HomePageState extends State<HomePage> with AutomaticKeepAliveClientMixin{
   final HomeController _homeController = Get.find();
   var _selected = Translator.locale.languageCode;
   int? _value = 1;
@@ -70,20 +72,6 @@ class _HomePageState extends State<HomePage> {
             mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              SizedBox(
-                width: 200,
-                child: TextDropdownFormField(
-                  options: ["Male", "Female"],
-                  decoration: InputDecoration(
-                      border: OutlineInputBorder(),
-                      suffixIcon: Icon(Icons.arrow_drop_down),
-                      labelText: "Gender"),
-                  dropdownHeight: 120,
-                ),
-              ),
-              SizedBox(
-                height: 20,
-              ),
               Padding(
                 padding: const EdgeInsets.all(16),
                 child: Container(
@@ -176,9 +164,33 @@ class _HomePageState extends State<HomePage> {
                   _homeController.selectedList = result;
                 },
               ),
-              ElevatedButton(
-                onPressed: () {},
-                child: Text('Show dropdown'),
+              ChoiceChip(
+                label: Text('Choice chip'),
+                selected: true,
+                shape: RoundedRectangleBorder(),
+                selectedColor: Colors.amber,
+                disabledColor: Colors.black12,
+              ),
+              SizedBox(
+                height: 200,
+                child: MultiSelectBottomSheet<Province>(
+                  items: _homeController.items,
+                  initialValue: _homeController.selectedList,
+                  listType: MultiSelectListType.CHIP,
+                  onSelectionChanged: (result ) {
+                    _homeController.selectedList = result;
+                  },
+                ),
+
+
+              ),
+              Expanded(
+                child: MultiSelectChip(onSelectionChanged: (result){
+                  print('length: ${result.length}');
+                  for(final item in result){
+                    print(item);
+                  }
+                },),
               ),
             ],
           ),
@@ -201,6 +213,10 @@ class _HomePageState extends State<HomePage> {
     }
     return items;
   }
+
+  @override
+  // TODO: implement wantKeepAlive
+  bool get wantKeepAlive => true;
 }
 
 class HomeView extends StatelessWidget {
